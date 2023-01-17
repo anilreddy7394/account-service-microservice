@@ -70,7 +70,7 @@
             }
             steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', serverUrl: '') {
-                sh "kubectl apply -f eks-account-service-staging.yaml.yaml"
+                sh "kubectl apply -f eks-account-service-staging.yaml"
             }
           }
           post{
