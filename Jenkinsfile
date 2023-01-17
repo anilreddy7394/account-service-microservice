@@ -21,6 +21,15 @@
                 sh "mvn clean install"
             }
         }
+     
+        stage('SonarQube Analysis') {
+            steps {
+               sh "mvn clean verify sonar:sonar \
+               -Dsonar.projectKey=jenkins-pipeline \
+               -Dsonar.host.url=http://52.86.114.38:9000 \
+               -Dsonar.login=sqp_7298ccece2bcd05561a94ac085c8eb645562d4b5"
+           }
+       }
         
         stage('Build image') {
             steps {
@@ -37,12 +46,42 @@
             }
         }
         
-        stage('K8S Deploy') {
-            steps{
+        stage('K8S Deploy to production') {
+            when {
+                branch 'master'
+            }
+            steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', serverUrl: '') {
-                sh "kubectl apply -f eks-deploy-k8s.yaml"
+                sh "kubectl apply -f eks-account-service.yaml"
             }
           }
+          post{
+              success{
+                  echo "Successfully deployed to production"
+              }
+              failure{
+                  echo "Failed deploying to production"
+              }
+           }
        }
+       stage('K8S Deploy to staging') {
+            when {
+                branch 'devlopment'
+            }
+            steps {
+                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', serverUrl: '') {
+                sh "kubectl apply -f eks-account-service-staging.yaml.yaml"
+            }
+          }
+          post{
+              success{
+                  echo "Successfully deployed to staging"
+              }
+              failure{
+                  echo "Failed deploying to staging"
+              }
+           }
+       }
+       
     }
 }
