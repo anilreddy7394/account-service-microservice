@@ -4,7 +4,7 @@
     }
     
     environment {
-        registry = "353258999787.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo"
+        registry = "353258999787.dkr.ecr.us-east-1.amazonaws.com/account_service_microservice"
     }
     
     agent any
@@ -33,7 +33,7 @@
         stage('Push into ECR') {
             steps {
                 sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 353258999787.dkr.ecr.us-east-1.amazonaws.com"
-                sh "docker push 353258999787.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest"
+                sh "docker push 353258999787.dkr.ecr.us-east-1.amazonaws.com/account_service_microservice:latest"
             }
         }
         
