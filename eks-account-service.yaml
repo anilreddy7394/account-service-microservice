@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: account-service
-        image: piomin/account-service
+        image: 353258999787.dkr.ecr.us-east-1.amazonaws.com/account_service_microservice:latest
         ports:
         - containerPort: 2222
           protocol: TCP
